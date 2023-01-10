@@ -1,0 +1,169 @@
+# Nemo config file
+# YAML format 
+# - use null to return None in Python
+# - note that YAML is fussy about large numbers: use e.g. 1.0e+14 for M500MSun (not 1e14)
+
+outputDir: /global/cscratch1/sd/maccrann/cmb/fg_outputs/nemo_allfgs_wnoise-wso_allin1-cori
+
+# Valid units are uK or Jy/sr
+# this should be a list of maps at different frequencies
+# NOTE: surveyMask is optional
+unfilteredMaps:
+    - {mapFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/sky_map_0093.fits",
+       weightsFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/ivar_map_0093.fits",
+       obsFreqGHz: 93., units: 'uK',
+       beamFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/beam_0093.txt",
+       label: '0093'}
+    - {mapFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/sky_map_0145.fits",
+       weightsFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/ivar_map_0145.fits",
+       obsFreqGHz: 145., units: 'uK',
+       beamFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/beam_0145.txt",
+       label: '0145'
+       }
+    - {mapFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/sky_map_0225.fits",
+       weightsFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/ivar_map_0225.fits",
+       obsFreqGHz: 225., units: 'uK',
+       beamFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/beam_0225.txt",
+       label: '0225'
+       }
+    - {mapFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/sky_map_0278.fits",
+       weightsFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/ivar_map_0278.fits",
+       obsFreqGHz: 278., units: 'uK',
+       beamFileName: "/global/cscratch1/sd/maccrann/cmb/fg_outputs/websky_outputs/allfgs_wnoise-wso/prep_map/cmb_orig/beam_0278.txt",
+       label: '0278'
+       }
+
+# If using filterSets, specify some options here,
+# e.g., maps to use - if not given, default is to use all maps in unfilteredMaps
+# If we wanted to override S/N thresholds for detection etc., we'd implement it in this thing
+filterSetOptions: {1: {mapToUse: '0093', thresholdSigma: 50.0, objIdent: 'ACT-S',
+                       measureShapes: True, ignoreSurveyMask: True},
+                   2: {mapToUse: '0093', thresholdSigma: 3.0, objIdent: 'ACT-S',
+                       subtractModelFromSets: [1], addSiphonedFromSets: [1],
+                       maskAndFillFromSets: [1], maskHoleDilationFactor: 3.0,
+                       saveCatalog: True, saveFilteredMaps: False, label: 'ptsrc_0093'},
+                   3: {mapToUse: '0150', thresholdSigma: 50.0, objIdent: 'ACT-S',
+                       measureShapes: True, ignoreSurveyMask: True},
+                   4: {mapToUse: '0150', thresholdSigma: 3.0, objIdent: 'ACT-S',
+                       subtractModelFromSets: [3], addSiphonedFromSets: [3],
+                       maskAndFillFromSets: [3], maskHoleDilationFactor: 3.0,
+                       saveCatalog: True, saveFilteredMaps: False, label: 'ptsrc_f150'},
+                   5: {mapToUse: '0225', thresholdSigma: 50.0, objIdent: 'ACT-S',
+                       measureShapes: True, ignoreSurveyMask: True},
+                   6: {mapToUse: '0225', thresholdSigma: 3.0, objIdent: 'ACT-S',
+                       subtractModelFromSets: [3], addSiphonedFromSets: [3],
+                       maskAndFillFromSets: [3], maskHoleDilationFactor: 3.0,
+                       saveCatalog: True, saveFilteredMaps: False, label: 'ptsrc_f225'},
+                   7: {mapToUse: '0278', thresholdSigma: 50.0, objIdent: 'ACT-S',
+                       measureShapes: True, ignoreSurveyMask: True},
+                   8: {mapToUse: '0278', thresholdSigma: 3.0, objIdent: 'ACT-S',
+                       subtractModelFromSets: [3], addSiphonedFromSets: [3],
+                       maskAndFillFromSets: [3], maskHoleDilationFactor: 3.0,
+                       saveCatalog: True, saveFilteredMaps: False, label: 'ptsrc_f278'},
+                   10: {subtractModelFromSets: [2, 4, 6, 8],
+                        maskAndFillFromSets: [1, 3, 5, 7], maskHoleDilationFactor: 3.0},
+                   11: {subtractModelFromSets: [2, 4, 6, 8],
+                        maskAndFillFromSets: [1, 3, 5, 7], maskHoleDilationFactor: 3.0,
+                        noiseModelCatalogFromSets: [10]}
+                  }
+
+# Masks
+surveyMask: '/global/project/projectdirs/act/data/maccrann/fullsky_mask_res0.5.fits'
+# Instead of giving point source mask, can give catalog instead
+#maskPointSourcesFromCatalog: null
+    
+# Detection/catalog options
+# Set useInterpolator; True for sub-pixel flux and SNR measurements
+thresholdSigma: 3.0
+minObjPix: 1
+findCenterOfMass: True
+useInterpolator: True
+rejectBorder: 0
+objIdent: 'CL'
+longNames: False
+catalogCuts: ['SNR > 3.0']
+measureShapes: True
+
+# Set this to True to generate a sky sim (with noise), run all the filters over it, and measure contamination
+# Set numSkySims to number required - we need to average over many as results vary a fair bit
+estimateContaminationFromSkySim: False
+numSkySims: 10
+
+# Set this to True to estimate contamination by running cluster finder over inverted maps
+# This is sensitive to how well point source masking is done
+estimateContaminationFromInvertedMaps: False
+
+# Run position recovery test
+positionRecoveryTest: False
+posRecIterations: 1
+posRecSourcesPerTile: 100
+    
+# tileDir options - cut-up each map into smaller sections
+useTiling: True
+stitchTiles: False
+tileOverlapDeg: 1.0
+tileDefinitions: {mask: '/global/project/projectdirs/act/data/maccrann/fullsky_mask_res0.5.fits',
+                  targetTileWidthDeg: 10.0,
+                  targetTileHeightDeg: 5.0}
+
+
+# allFilters is a dictionary of parameters that will be copied into all mapFilters
+# (these can be overridden by keys with the same name in mapFilters)
+allFilters: {class: "ArnaudModelMatchedFilter",
+             params: {noiseParams: {method: "dataMap",
+                                    noiseGridArcmin: 40.,
+                                    numNoiseBins: 12},
+                      saveFilteredMaps: False,
+                      saveRMSMap: False,
+                      savePlots: False,
+                      saveDS9Regions: False,
+                      outputUnits: 'yc',
+                      edgeTrimArcmin: 0.0},
+             filterSets: [10, 11]
+            }
+
+# mapFilters is a list of all the different filters to apply
+# (keys in mapFilters with the same name as those in allFilters take priority)
+mapFilters:
+    - {label: "BeamPass1",
+       class: "BeamMatchedFilter",
+       params: {outputUnits: 'uK', noiseParams: {method: "model"}},
+       filterSets: [1, 3, 5]}
+    - {label: "BeamPass2",
+       class: "BeamMatchedFilter",
+       params: {outputUnits: 'uK', noiseParams: {method: "dataMap"}},
+       filterSets: [2, 4, 6]}
+    - {label: "Arnaud_M1e14_z0p2",
+       params: {M500MSun: 1.0e+14, z: 0.2}}
+    - {label: "Arnaud_M2e14_z0p2",
+       params: {M500MSun: 2.0e+14, z: 0.2}}
+    - {label: "Arnaud_M4e14_z0p2",
+       params: {M500MSun: 4.0e+14, z: 0.2}}
+    - {label: "Arnaud_M8e14_z0p2",
+       params: {M500MSun: 8.0e+14, z: 0.2}}
+    - {label: "Arnaud_M1e14_z0p4",
+       params: {M500MSun: 1.0e+14, z: 0.4}}
+    - {label: "Arnaud_M2e14_z0p4",
+       params: {M500MSun: 2.0e+14, z: 0.4,
+                saveFilteredMaps: True,
+                savePlots: True}}
+    - {label: "Arnaud_M4e14_z0p4",
+       params: {M500MSun: 4.0e+14, z: 0.4}}
+    - {label: "Arnaud_M8e14_z0p4",
+       params: {M500MSun: 8.0e+14, z: 0.4}}
+    - {label: "Arnaud_M1e14_z0p8",
+       params: {M500MSun: 1.0e+14, z: 0.8}}
+    - {label: "Arnaud_M2e14_z0p8",
+       params: {M500MSun: 2.0e+14, z: 0.8}}
+    - {label: "Arnaud_M4e14_z0p8",
+       params: {M500MSun: 4.0e+14, z: 0.8}}
+    - {label: "Arnaud_M8e14_z0p8",
+       params: {M500MSun: 8.0e+14, z: 0.8}}
+    - {label: "Arnaud_M1e14_z1p2",
+       params: {M500MSun: 1.0e+14, z: 1.2}}
+    - {label: "Arnaud_M2e14_z1p2",
+       params: {M500MSun: 2.0e+14, z: 1.2}}
+    - {label: "Arnaud_M4e14_z1p2",
+       params: {M500MSun: 4.0e+14, z: 1.2}}
+    - {label: "Arnaud_M8e14_z1p2",
+       params: {M500MSun: 8.0e+14, z: 1.2}}
